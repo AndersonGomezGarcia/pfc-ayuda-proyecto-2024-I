@@ -102,28 +102,30 @@ class Itinerario() {
   }
 
   def itinerariosSalida(vuelos: List[Vuelo], aeropuertos: List[Aeropuerto]): (String, String, Int, Int) => List[Vuelo] = {
+    val buscarItinerariosFn = itinerarios(vuelos, aeropuertos)
+
     def convertirAMinutos(hora: Int, minutos: Int): Int = {
       hora * 60 + minutos
     }
 
-    def calcularHoraLlegadaTotal(itinerario: List[Vuelo]): Int = {
-      convertirAMinutos(itinerario.last.HL, itinerario.last.ML)
+    def calcularLapsoTiempo(horaLlegada: Int, horaCita: Int): Int = {
+      val diferencia = horaCita - horaLlegada
+      if (diferencia >= 0) diferencia else 1440 + diferencia
     }
 
     def esValido(itinerario: List[Vuelo], tiempoCita: Int): Boolean = {
-      val horaLlegada = calcularHoraLlegadaTotal(itinerario)
+      val horaLlegada = convertirAMinutos(itinerario.last.HL, itinerario.last.ML)
       horaLlegada <= tiempoCita || (horaLlegada < 1440 && tiempoCita < horaLlegada)
     }
 
     (origen: String, destino: String, horaCita: Int, minCita: Int) => {
       val tiempoCita = convertirAMinutos(horaCita, minCita)
-      val todosItinerarios = itinerarios(vuelos, aeropuertos)(origen, destino)
-
+      val todosItinerarios = buscarItinerariosFn(origen, destino)
       val itinerariosValidos = todosItinerarios.filter(it => esValido(it, tiempoCita))
 
       val itinerariosOrdenados = itinerariosValidos.sortBy { it =>
-        val horaLlegada = calcularHoraLlegadaTotal(it)
-        val lapsoTiempo = if (horaCita - horaLlegada >= 0) horaCita - horaLlegada else 1440 + horaCita - horaLlegada
+        val horaLlegada = convertirAMinutos(it.last.HL, it.last.ML)
+        val lapsoTiempo = calcularLapsoTiempo(horaLlegada, tiempoCita)
         val horaSalida = convertirAMinutos(it.head.HS, it.head.MS)
         (lapsoTiempo, horaSalida)
       }
