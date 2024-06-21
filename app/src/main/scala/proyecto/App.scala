@@ -17,10 +17,7 @@ object App{
   def main(args: Array[String]): Unit = {
     println(saludo())
     println(vuelosCurso)
-    println(
-      withWarmer(new Warmer.Default) measure {
-        (1 to 100000000).toArray
-      }
-    )
+    val benchmarking = new Benchmarking()
+    benchmarking.itinerariosSalidaBenchmark()
   }
  }

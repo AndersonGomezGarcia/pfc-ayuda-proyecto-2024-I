@@ -12,13 +12,13 @@ import org.junit.runner.RunWith
 import org.scalatestplus.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class TestPruebasSeq4 extends AnyFunSuite{
+class TestPruebasPar4 extends AnyFunSuite{
 
-  val itoObj = new Itinerario()
-  val itsCurso = itoObj.itinerariosAire(vuelosCurso , aeropuertosCurso)
-  val itsCurso15 = itoObj.itinerariosAire(vuelosA1, aeropuertos)
-  val itsCurso40 = itoObj.itinerariosAire(vuelosB1, aeropuertos)
-  val itsCurso100 = itoObj.itinerariosAire(vuelosC1, aeropuertos)
+  val itoObj = new ItinerarioPar()
+  val itsCurso = itoObj.itinerariosAirePar(vuelosCurso , aeropuertosCurso)
+  val itsCurso15 = itoObj.itinerariosAirePar(vuelosA1, aeropuertos)
+  val itsCurso40 = itoObj.itinerariosAirePar(vuelosB1, aeropuertos)
+  val itsCurso100 = itoObj.itinerariosAirePar(vuelosC1, aeropuertos)
 
   test("test 1") {
     val its1 = itsCurso("MID", "SVCS")

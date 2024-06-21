@@ -1,9 +1,3 @@
-/**
- * Plantilla para pruebas
- * @author Carlos Delgado
- * @version 1.0
- */
-
 package proyecto
 import datos._
 
@@ -12,13 +6,13 @@ import org.junit.runner.RunWith
 import org.scalatestplus.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class TestPruebasSeq5 extends AnyFunSuite{
+class TestPruebasPar5 extends AnyFunSuite{
 
-  val itoObj = new Itinerario()
-  val itsCurso = itoObj.itinerariosSalida(vuelosCurso , aeropuertosCurso)
-  val itsCurso15 = itoObj.itinerariosSalida(vuelosA1, aeropuertos)
-  val itsCurso40 = itoObj.itinerariosSalida(vuelosB1, aeropuertos)
-  val itsCurso100 = itoObj.itinerariosSalida(vuelosC1, aeropuertos)
+  val itoObj = new ItinerarioPar()
+  val itsCurso = itoObj.itinerariosSalidaPar(vuelosCurso , aeropuertosCurso)
+  val itsCurso15 = itoObj.itinerariosSalidaPar(vuelosA1, aeropuertos)
+  val itsCurso40 = itoObj.itinerariosSalidaPar(vuelosB1, aeropuertos)
+  val itsCurso100 = itoObj.itinerariosSalidaPar(vuelosC1, aeropuertos)
 
   test("test1") {
     val its1 = itsCurso("CTG", "PTY", 11, 40)

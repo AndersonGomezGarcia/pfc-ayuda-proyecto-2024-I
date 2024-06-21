@@ -49,9 +49,11 @@ class Itinerario() {
     }
 
     def calcularTiempoTotal(itinerario: List[Vuelo], aeropuerto: List[Aeropuerto]): Int = {
-      itinerario.zipWithIndex.map { case (vuelo, index) =>
-        calcularTiempoVuelo(vuelo, aeropuerto) + (if (index < itinerario.length - 1) calcularTiempoEspera(vuelo, itinerario(index + 1), aeropuerto) else 0)
-      }.sum
+      itinerario match {
+        case Nil => 0
+        case vuelo :: Nil => calcularTiempoVuelo(vuelo, aeropuerto)
+        case vuelo1 :: vuelo2 :: tail => calcularTiempoVuelo(vuelo1, aeropuerto) + calcularTiempoEspera(vuelo1, vuelo2, aeropuerto) + calcularTiempoTotal(vuelo2 :: tail, aeropuerto)
+      }
     }
 
 
@@ -101,34 +103,18 @@ class Itinerario() {
     }
   }
 
-  def itinerariosSalida(vuelos: List[Vuelo], aeropuertos: List[Aeropuerto]): (String, String, Int, Int) => List[Vuelo] = {
+  def itinerariosSalida(vuelos: vuelos, aeropuertos: aeropuertos): (String, String, Int, Int) => List[Vuelo] = {
     def convertirAMinutos(hora: Int, minutos: Int): Int = {
       hora * 60 + minutos
     }
-
-    def calcularHoraLlegadaTotal(itinerario: List[Vuelo]): Int = {
-      convertirAMinutos(itinerario.last.HL, itinerario.last.ML)
-    }
-
-    def esValido(itinerario: List[Vuelo], tiempoCita: Int): Boolean = {
-      val horaLlegada = calcularHoraLlegadaTotal(itinerario)
-      horaLlegada <= tiempoCita || (horaLlegada < 1440 && tiempoCita < horaLlegada)
-    }
-
     (origen: String, destino: String, horaCita: Int, minCita: Int) => {
       val tiempoCita = convertirAMinutos(horaCita, minCita)
-      val todosItinerarios = itinerarios(vuelos, aeropuertos)(origen, destino)
-
-      val itinerariosValidos = todosItinerarios.filter(it => esValido(it, tiempoCita))
-
-      val itinerariosOrdenados = itinerariosValidos.sortBy { it =>
-        val horaLlegada = calcularHoraLlegadaTotal(it)
-        val lapsoTiempo = if (horaCita - horaLlegada >= 0) horaCita - horaLlegada else 1440 + horaCita - horaLlegada
-        val horaSalida = convertirAMinutos(it.head.HS, it.head.MS)
-        (lapsoTiempo, horaSalida)
+      val rutasEncontradas = itinerarios(vuelos, aeropuertos)(origen, destino).filter(ruta => convertirAMinutos(ruta.last.HL, ruta.last.ML) <= tiempoCita)
+      if (rutasEncontradas.isEmpty) List()
+      else {
+        val ultimaSalida = rutasEncontradas.map(ruta => convertirAMinutos(ruta.last.HS, ruta.last.MS)).max
+        rutasEncontradas.filter(ruta => convertirAMinutos(ruta.last.HS, ruta.last.MS) == ultimaSalida).head
       }
-
-      itinerariosOrdenados.headOption.getOrElse(List.empty)
     }
   }
 }

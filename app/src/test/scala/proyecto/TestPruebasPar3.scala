@@ -1,7 +1,7 @@
 /**
  * Plantilla para pruebas
-* @author Carlos Delgado
-* @version 1.0
+ * @author Carlos Delgado
+ * @version 1.0
  */
 
 package proyecto
@@ -12,13 +12,13 @@ import org.junit.runner.RunWith
 import org.scalatestplus.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class TestPruebasSeq3 extends AnyFunSuite{
+class TestPruebasPar3 extends AnyFunSuite{
 
-  val itoObj = new Itinerario()
-  val itsCurso = itoObj.itinerariosEscalas(vuelosCurso , aeropuertosCurso)
-  val itsCurso15 = itoObj.itinerariosEscalas(vuelosA1, aeropuertos)
-  val itsCurso40 = itoObj.itinerariosEscalas(vuelosB1, aeropuertos)
-  val itsCurso100 = itoObj.itinerariosEscalas(vuelosC1, aeropuertos)
+  val itoObj = new ItinerarioPar()
+  val itsCurso = itoObj.itinerariosEscalasPar(vuelosCurso , aeropuertosCurso)
+  val itsCurso15 = itoObj.itinerariosEscalasPar(vuelosA1, aeropuertos)
+  val itsCurso40 = itoObj.itinerariosEscalasPar(vuelosB1, aeropuertos)
+  val itsCurso100 = itoObj.itinerariosEscalasPar(vuelosC1, aeropuertos)
 
   test("test 1") {
     val its1 = itsCurso("MID", "SVCS")
@@ -33,13 +33,13 @@ class TestPruebasSeq3 extends AnyFunSuite{
     val its3 = itsCurso("CLO", "SVO")
     assert(its3 === List(
       List(Vuelo("AVA", 9432, "CLO", 7, 0, "BOG", 8, 0, 0),
-      Vuelo("IBERIA", 505, "BOG", 18, 0, "MAD", 12, 0, 0),
-      Vuelo("IBERIA", 506, "MAD", 14, 0, "SVO", 23, 20, 0)),
+        Vuelo("IBERIA", 505, "BOG", 18, 0, "MAD", 12, 0, 0),
+        Vuelo("IBERIA", 506, "MAD", 14, 0, "SVO", 23, 20, 0)),
       List(Vuelo("AVA", 9432, "CLO", 7, 0, "BOG", 8, 0, 0),
-      Vuelo("IBERIA", 505, "BOG", 18, 0, "MAD", 12, 0, 0),
-      Vuelo("IBERIA", 507, "MAD", 16, 0, "SVO", 1, 20, 0)),
+        Vuelo("IBERIA", 505, "BOG", 18, 0, "MAD", 12, 0, 0),
+        Vuelo("IBERIA", 507, "MAD", 16, 0, "SVO", 1, 20, 0)),
       List(Vuelo("AVA", 9432, "CLO", 7, 0, "SVO", 2, 20, 4))
-      )
+    )
     )
   }
 
@@ -47,11 +47,11 @@ class TestPruebasSeq3 extends AnyFunSuite{
     val its4 = itsCurso("CLO", "MEX")
     assert(its4 === List(
       List(Vuelo("AVA", 9432, "CLO", 7, 0, "BOG", 8, 0, 0),
-      Vuelo("LATAM", 787, "BOG", 17, 0, "MEX", 19, 0, 0)),
+        Vuelo("LATAM", 787, "BOG", 17, 0, "MEX", 19, 0, 0)),
       List(Vuelo("AVA", 9432, "CLO", 7, 0, "BOG", 8, 0, 0),
-      Vuelo("VIVA", 756, "BOG", 9, 0, "MDE", 10, 0, 0),
-      Vuelo("VIVA", 769, "MDE", 11, 0, "BAQ", 12, 0, 0),
-      Vuelo("AVA", 5643, "BAQ", 14, 0, "MEX", 16, 0, 0))
+        Vuelo("VIVA", 756, "BOG", 9, 0, "MDE", 10, 0, 0),
+        Vuelo("VIVA", 769, "MDE", 11, 0, "BAQ", 12, 0, 0),
+        Vuelo("AVA", 5643, "BAQ", 14, 0, "MEX", 16, 0, 0))
     ))
   }
 
