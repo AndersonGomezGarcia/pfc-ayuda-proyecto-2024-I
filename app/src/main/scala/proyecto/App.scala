@@ -18,6 +18,15 @@ object App{
     println(saludo())
     println(vuelosCurso)
     val benchmarking = new Benchmarking()
+
+    benchmarking.itinerariosTiempoBenchmark()
+    print("\n")
+    benchmarking.itinerariosEscalasBenchmark()
+    print("\n")
+    benchmarking.itinerariosAireBenchmark()
+    print("\n")
     benchmarking.itinerariosSalidaBenchmark()
+    print("\n")
+    benchmarking.itinerariosBenchmark()
   }
  }

@@ -28,11 +28,9 @@ class ItinerarioPar() {
           }
       }
     }
+
     (cod1: String, cod2: String) => buscarItinerarios(cod1, cod2)
   }
-
-
-
 
   def itinerariosTiempoPar(vuelos: List[Vuelo], aeropuertos: List[Aeropuerto]): (String, String) => List[List[Vuelo]] = {
     def gmtOffset(cod: String): Double = {
@@ -63,13 +61,10 @@ class ItinerarioPar() {
 
     (cod1: String, cod2: String) => {
       val allItineraries = itinerariosPar(vuelos, aeropuertos)(cod1, cod2)
-
       // Convertimos la colección a una colección paralela
       val allItinerariesPar = allItineraries.par
-
       // Calculamos el tiempo total en paralelo
       val allItinerariesTime = allItinerariesPar.map(itinerary => (itinerary, calcularTiempoTotal(itinerary, aeropuertos)))
-
       // Convertimos a lista, ordenamos y seleccionamos los primeros 3
       allItinerariesTime
         .toList
@@ -83,7 +78,6 @@ class ItinerarioPar() {
     def escalas(itinerario: List[Vuelo]): Int = {
       (itinerario.map(_.Esc).sum) + (itinerario.size - 1)
     }
-
     (origen: String, destino: String) => {
       val itinerariosEncontrados = itinerariosPar(vuelos, aeropuertos)(origen, destino)
 
@@ -100,13 +94,10 @@ class ItinerarioPar() {
     }
   }
 
-
-
   def itinerariosAirePar(vuelos: List[Vuelo], aeropuertos: List[Aeropuerto]): (String, String) => List[List[Vuelo]] = {
     def gmtOffset(cod: String): Double = {
       aeropuertos.find(_.Cod.equalsIgnoreCase(cod)).map(_.GMT).getOrElse(0.0)
     }
-
     def calcularTiempoVuelo(vuelo: Vuelo, aeropuerto: List[Aeropuerto]): Int = {
       val gmtOrg = gmtOffset(vuelo.Org)
       val gmtDst = gmtOffset(vuelo.Dst)
@@ -115,20 +106,16 @@ class ItinerarioPar() {
       val duracionVuelo = horaLlegadaGMT - horaSalidaGMT
       if (duracionVuelo < 0) duracionVuelo + 1440 else duracionVuelo
     }
-
     def calcularTiempoTotal(itinerario: List[Vuelo], aeropuerto: List[Aeropuerto]): Int = {
       itinerario.map(vuelo => calcularTiempoVuelo(vuelo, aeropuerto)).sum
     }
-
     (cod1: String, cod2: String) => {
       val allItineraries = Await.result(Future { itinerariosPar(vuelos, aeropuertos)(cod1, cod2) }, Duration.Inf)
 
       val calcularTiemposFuturas = Future.traverse(allItineraries) { itinerario =>
         Future { calcularTiempoTotal(itinerario, aeropuertos) }
       }
-
       val allItinerariesWithTimes = Await.result(calcularTiemposFuturas, Duration.Inf).zip(allItineraries)
-
       allItinerariesWithTimes.sortBy(_._1).map(_._2).take(3)
     }
   }
@@ -142,21 +129,13 @@ class ItinerarioPar() {
       hora * 60 + minutos
     }
 
-    def calcularHoraLlegadaTotal(itinerario: List[Vuelo]): Int = {
-      convertirAMinutos(itinerario.last.HL, itinerario.last.ML)
-    }
-
-    def calcularHoraSalidaTotal(itinerario: List[Vuelo]): Int = {
-      convertirAMinutos(itinerario.head.HS, itinerario.head.MS)
-    }
-
     def calcularLapsoTiempo(horaLlegada: Int, horaCita: Int): Int = {
       val diferencia = horaCita - horaLlegada
       if (diferencia >= 0) diferencia else 1440 + diferencia
     }
 
     def esValido(itinerario: List[Vuelo], tiempoCita: Int): Boolean = {
-      val horaLlegada = calcularHoraLlegadaTotal(itinerario)
+      val horaLlegada = convertirAMinutos(itinerario.last.HL, itinerario.last.ML)
       horaLlegada <= tiempoCita || (horaLlegada < 1440 && tiempoCita < horaLlegada)
     }
 
@@ -173,9 +152,10 @@ class ItinerarioPar() {
       val itinerariosOrdenadosFuturo = itinerariosValidosFuturo.flatMap { itinerariosValidos =>
         Future.sequence(itinerariosValidos.map { it =>
           Future {
-            val horaLlegada = calcularHoraLlegadaTotal(it)
+            val horaLlegada = convertirAMinutos(it.last.HL, it.last.ML)
             val lapsoTiempo = calcularLapsoTiempo(horaLlegada, tiempoCita)
-            (it, lapsoTiempo, calcularHoraSalidaTotal(it))
+            val horaSalida = convertirAMinutos(it.head.HS, it.head.MS)
+            (it, lapsoTiempo, horaSalida)
           }
         })
       }.map { itinerariosOrdenados =>
