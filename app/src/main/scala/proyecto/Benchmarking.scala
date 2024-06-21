@@ -182,9 +182,9 @@ class Benchmarking {
 
       /*
       objParalelo.itinerariosSalidaPar(vuelosA1, aeropuertos)("HOU", "BNA", 19,20)
-      objParalelo.itinerariosSalidaPar(vuelosB1, aeropuertos)("DEN", "MIA",18, 53)*/
+      objParalelo.itinerariosSalidaPar(vuelosB1, aeropuertos)("DEN", "MIA",18, 53)
       objParalelo.itinerariosSalidaPar(vuelosC1, aeropuertos)("SFO", "BOS",5,12)
-      objParalelo.itinerariosSalidaPar(vuelosC1, aeropuertos)("BOS","SFO", 12, 22)
+      objParalelo.itinerariosSalidaPar(vuelosC1, aeropuertos)("BOS","SFO", 12, 22)*/
       objParalelo.itinerariosSalidaPar(vuelosC1, aeropuertos)("BOS","SFO", 12, 22)
     }
     val timeSecuencial5 = config(
@@ -197,9 +197,9 @@ class Benchmarking {
       objSecuencial.itinerariosSalida(vuelosCurso , aeropuertosCurso)
       /*
       objSecuencial.itinerariosSalida(vuelosA1, aeropuertos)("HOU", "BNA", 19,20)
-      objSecuencial.itinerariosSalida(vuelosB1, aeropuertos)("DEN", "MIA",18, 53)*/
+      objSecuencial.itinerariosSalida(vuelosB1, aeropuertos)("DEN", "MIA",18, 53)
       objSecuencial.itinerariosSalida(vuelosC1, aeropuertos)("SFO", "BOS",5,12)
-      objSecuencial.itinerariosSalida(vuelosC1, aeropuertos)("BOS","SFO", 12, 22)
+      objSecuencial.itinerariosSalida(vuelosC1, aeropuertos)("BOS","SFO", 12, 22)*/
       objSecuencial.itinerariosSalida(vuelosC1, aeropuertos)("BOS","SFO", 12, 22)
     }
     println(s"Tiempo de ejecución Salida P5: $timeParalela5")
